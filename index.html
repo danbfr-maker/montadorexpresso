@@ -1,0 +1,2590 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Montador Expresso - Seu Móvel Montado Rapidamente</title>
+  <style>
+    :root {
+      --primary: #e11d48; 
+      --primary-hover: #be123c;
+      --secondary: #0f172a; 
+      --success: #16a34a;
+      --danger: #dc2626;
+      --warning: #d97706;
+      --dark: #0f172a;
+      --light: #f8fafc;
+      --gray: #64748b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #f1f5f9;
+      color: var(--dark);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      background-color: #ffffff;
+      color: var(--dark);
+      padding: 1.5rem 1rem 1rem 1rem;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border-bottom: 3px solid var(--primary);
+    }
+
+    .brand-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      max-width: 300px;
+      margin-bottom: 0.2rem;
+    }
+
+    .brand-logo-svg {
+      width: 100%;
+      height: auto;
+      max-height: 240px;
+      display: block;
+    }
+
+    header p {
+      font-size: 0.95rem;
+      color: var(--gray);
+      margin-top: 0.4rem;
+    }
+
+    .mode-selector {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      gap: 0.8rem;
+      margin: 1.5rem auto;
+      width: 90%;
+      max-width: 700px;
+    }
+
+    .btn-mode {
+      flex: 1;
+      padding: 0.8rem 1rem;
+      font-size: 0.95rem;
+      font-weight: bold;
+      border: 2px solid var(--secondary);
+      background: white;
+      color: var(--secondary);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+      text-align: center;
+    }
+
+    .btn-mode.active, .btn-mode:hover {
+      background: var(--secondary);
+      color: white;
+      border-color: var(--secondary);
+    }
+
+    main {
+      max-width: 700px;
+      width: 90%;
+      margin: 0 auto 2rem auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+      flex-grow: 1;
+    }
+
+    .view-section {
+      display: none;
+    }
+
+    .view-section.active {
+      display: block;
+    }
+
+    h2 {
+      margin-bottom: 1.2rem;
+      color: var(--dark);
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 0.5rem;
+    }
+
+    h3 {
+      margin-top: 1.5rem;
+      margin-bottom: 0.8rem;
+      color: var(--dark);
+    }
+
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 0.8rem;
+    }
+
+    .form-row .form-group {
+      flex: 1;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.4rem;
+      font-weight: 600;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 0.8rem;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+
+    button.btn-submit {
+      width: 100%;
+      padding: 1rem;
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 1rem;
+      transition: background 0.2s;
+    }
+
+    button.btn-submit:hover {
+      background-color: var(--primary-hover);
+    }
+
+    .btn-cancel-request {
+      width: 100%;
+      padding: 0.8rem;
+      background-color: #fee2e2;
+      color: var(--danger);
+      border: 1px solid #fca5a5;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 1rem;
+      transition: all 0.2s;
+    }
+
+    .btn-cancel-request:hover {
+      background-color: #fca5a5;
+      color: #7f1d1d;
+    }
+
+    .toggle-auth-link {
+      text-align: center;
+      margin-top: 1.2rem;
+      font-size: 0.95rem;
+    }
+
+    .toggle-auth-link a {
+      color: var(--primary);
+      text-decoration: underline;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .status-card {
+      margin-top: 1.5rem;
+      padding: 1.5rem;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .waiting-box {
+      background: #fffbeeb0;
+      border: 1px dashed var(--warning);
+      display: none;
+    }
+
+    .proposal-box {
+      background: #fff1f2;
+      border: 2px solid var(--primary);
+      display: none;
+    }
+
+    .accepted-box {
+      background: #f0fdf4;
+      border: 2px solid var(--success);
+      display: none;
+    }
+
+    .finished-box {
+      background: #f0fdf4;
+      border: 2px solid var(--success);
+      display: none;
+    }
+
+    .rating-box {
+      background: #fffbeb;
+      border: 2px solid var(--warning);
+      display: none;
+    }
+
+    .profile-img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--primary);
+    }
+
+    .chat-container {
+      margin-top: 1.5rem;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #f8fafc;
+      text-align: left;
+    }
+
+    .chat-header {
+      background: var(--secondary);
+      color: white;
+      padding: 0.8rem 1rem;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .chat-messages {
+      height: 200px;
+      padding: 1rem;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .chat-msg {
+      max-width: 80%;
+      padding: 0.6rem 0.9rem;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      line-height: 1.3;
+    }
+
+    .chat-msg.sent {
+      align-self: flex-end;
+      background: var(--primary);
+      color: white;
+      border-bottom-right-radius: 2px;
+    }
+
+    .chat-msg.received {
+      align-self: flex-start;
+      background: #e2e8f0;
+      color: var(--dark);
+      border-bottom-left-radius: 2px;
+    }
+
+    .chat-msg .sender-name {
+      font-size: 0.75rem;
+      font-weight: bold;
+      margin-bottom: 2px;
+      display: block;
+      opacity: 0.8;
+    }
+
+    .chat-input-area {
+      display: flex;
+      border-top: 1px solid #cbd5e1;
+      background: white;
+    }
+
+    .chat-input-area input {
+      border: none;
+      padding: 0.8rem;
+      border-radius: 0;
+      outline: none;
+    }
+
+    .chat-input-area button {
+      background: var(--secondary);
+      color: white;
+      border: none;
+      padding: 0 1.2rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .dashboard-header {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      background: #f8fafc;
+      padding: 1.2rem;
+      border-radius: 10px;
+      border: 1px solid #e2e8f0;
+      margin-bottom: 1.5rem;
+    }
+
+    .dashboard-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 1rem;
+    }
+
+    .profile-info {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .profile-details {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .header-actions-group {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-toggle-online {
+      padding: 0.6rem 1rem;
+      font-size: 0.85rem;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .btn-toggle-online.is-off {
+      background-color: var(--success);
+      color: white;
+    }
+
+    .btn-toggle-online.is-off:hover {
+      background-color: #15803d;
+    }
+
+    .btn-toggle-online.is-on {
+      background-color: #e2e8f0;
+      color: var(--dark);
+      border: 1px solid #cbd5e1;
+    }
+
+    .btn-toggle-online.is-on:hover {
+      background-color: #cbd5e1;
+    }
+
+    .btn-edit-profile {
+      background-color: #e2e8f0;
+      color: var(--dark);
+      border: 1px solid #cbd5e1;
+      padding: 0.6rem 0.9rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .btn-edit-profile:hover {
+      background-color: #cbd5e1;
+    }
+
+    .btn-logout {
+      background-color: #f1f5f9;
+      color: var(--danger);
+      border: 1px solid #fca5a5;
+      padding: 0.6rem 0.9rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .btn-logout:hover {
+      background-color: #fee2e2;
+    }
+
+    .annuity-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      padding: 1rem;
+      border-radius: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .pix-code {
+      background: #e2e8f0;
+      padding: 0.8rem;
+      border-radius: 4px;
+      word-break: break-all;
+      font-family: monospace;
+      font-size: 0.85rem;
+      margin: 0.5rem 0;
+    }
+
+    .order-card {
+      border: 1px solid #e2e8f0;
+      border-left: 5px solid var(--primary);
+      padding: 1.5rem;
+      border-radius: 8px;
+      background: #fff;
+      margin-top: 1rem;
+      text-align: left;
+    }
+
+    .order-card.in-progress {
+      border-left-color: var(--warning);
+      background: #fffbeb;
+    }
+
+    .order-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .btn-accept {
+      flex: 1;
+      background: var(--success);
+      color: white;
+      border: none;
+      padding: 0.8rem;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .btn-finish {
+      width: 100%;
+      background: var(--secondary);
+      color: white;
+      border: none;
+      padding: 0.9rem;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+
+    .btn-reject {
+      flex: 1;
+      background: var(--danger);
+      color: white;
+      border: none;
+      padding: 0.8rem;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: bold;
+      width: fit-content;
+    }
+    .status-online { background: #dcfce7; color: #15803d; }
+    .status-offline { background: #fee2e2; color: #b91c1c; }
+
+    .history-card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 0.8rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .history-info strong {
+      display: block;
+      color: var(--dark);
+    }
+
+    .history-info span {
+      font-size: 0.85rem;
+      color: var(--gray);
+    }
+
+    .history-price {
+      font-weight: bold;
+      color: var(--success);
+      font-size: 1.1rem;
+    }
+
+    .timer-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      background: #fee2e2;
+      color: var(--danger);
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-weight: bold;
+      font-size: 0.9rem;
+      float: right;
+    }
+
+    .star-rating {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin: 1.2rem 0;
+      direction: rtl;
+    }
+
+    .star-rating input {
+      display: none;
+    }
+
+    .star-rating label {
+      font-size: 2.5rem;
+      color: #cbd5e1;
+      cursor: pointer;
+      transition: color 0.2s ease;
+      margin: 0;
+    }
+
+    .star-rating label:hover,
+    .star-rating label:hover ~ label,
+    .star-rating input:checked ~ label {
+      color: #f59e0b;
+    }
+
+    .rating-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      color: #d97706;
+      font-weight: bold;
+      font-size: 0.95rem;
+    }
+
+    .admin-card {
+      background: #fff;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .admin-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      border-bottom: 2px solid #cbd5e1;
+      padding-bottom: 0.5rem;
+    }
+
+    .admin-tab-btn {
+      padding: 0.6rem 1rem;
+      font-weight: bold;
+      background: #e2e8f0;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .admin-tab-btn.active {
+      background: var(--primary);
+      color: white;
+    }
+
+    .terms-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 1.2rem;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .terms-group input[type="checkbox"] {
+      width: auto;
+      cursor: pointer;
+    }
+
+    .link-terms {
+      color: var(--primary);
+      text-decoration: underline;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .modal-terms {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(15, 23, 42, 0.7);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+      padding: 1rem;
+    }
+
+    .modal-terms-content {
+      background: #fff;
+      border-radius: 12px;
+      max-width: 600px;
+      width: 100%;
+      max-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3);
+      overflow: hidden;
+    }
+
+    .modal-terms-header {
+      padding: 1.2rem;
+      background: var(--secondary);
+      color: white;
+      font-weight: bold;
+      font-size: 1.1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-terms-body {
+      padding: 1.5rem;
+      overflow-y: auto;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      color: #334155;
+    }
+
+    .modal-terms-body h4 {
+      margin-top: 1rem;
+      margin-bottom: 0.4rem;
+      color: var(--dark);
+    }
+
+    .modal-terms-footer {
+      padding: 1rem;
+      background: #f8fafc;
+      border-top: 1px solid #e2e8f0;
+      text-align: right;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1.5rem 1rem;
+      font-size: 0.8rem;
+      color: var(--gray);
+    }
+
+    .btn-admin-footer {
+      background: transparent;
+      border: none;
+      color: #cbd5e1;
+      font-size: 0.75rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .btn-admin-footer:hover {
+      color: var(--gray);
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand-container">
+      <svg class="brand-logo-svg" viewBox="0 0 400 380" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g id="emblem" transform="translate(0, 10)">
+          <path d="M 110,40 L 200,120 L 200,165 L 140,110 L 140,210 L 200,250 L 200,280 L 110,210 Z" fill="#000000" />
+          <path d="M 110,65 L 122,55 L 140,70 L 140,90 Z" fill="#ffffff" />
+          <path d="M 110,215 L 140,238 L 140,250 L 110,228 Z" fill="#000000" />
+          <path d="M 290,40 L 200,120 L 200,165 L 260,110 L 260,210 L 200,250 L 200,280 L 290,210 Z" fill="#000000" />
+          <path d="M 290,65 L 278,55 L 260,70 L 260,90 Z" fill="#ffffff" />
+          <path d="M 290,215 L 260,238 L 260,250 L 290,228 Z" fill="#000000" />
+          <path d="M 165,145 L 200,115 L 235,145 L 235,195 L 200,225 L 165,195 Z" fill="#E31B23" />
+          <path d="M 188,168 C 188,162 193,157 202,157 C 208,157 213,161 214,166 L 208,166 C 207,163 205,161 202,161 C 197,161 193,164 193,168 C 193,172 197,175 202,175 C 205,175 207,173 208,170 L 214,170 C 213,175 208,179 202,179 C 193,179 188,174 188,168 Z" fill="#ffffff" />
+          <path d="M 190,165 H 202 V 168 H 190 Z M 190,170 H 200 V 173 H 190 Z M 190,175 H 205 V 178 H 190 Z" fill="#ffffff" />
+        </g>
+        <g id="typography">
+          <text x="200" y="320" font-family="'Arial Black', 'Arial Bold', Gadget, sans-serif" font-weight="900" font-size="46" fill="#000000" text-anchor="middle" letter-spacing="-1">montador</text>
+          <text x="200" y="360" font-family="'Arial Black', 'Arial Bold', Gadget, sans-serif" font-weight="900" font-size="38" fill="#E31B23" text-anchor="middle" letter-spacing="-0.5">expresso</text>
+        </g>
+      </svg>
+    </div>
+    <p>Conectando quem precisa de montagem com profissionais qualificados</p>
+  </header>
+
+  <div class="mode-selector">
+    <button class="btn-mode active" onclick="switchView('cliente')">Área do Cliente</button>
+    <button class="btn-mode" onclick="switchView('montador')">Área do Montador</button>
+  </div>
+
+  <main>
+    <!-- Área do Cliente -->
+    <section id="view-cliente" class="view-section active">
+      <h2>Solicitar Montagem de Móveis</h2>
+      
+      <form id="form-cliente" onsubmit="solicitarMontagem(event)">
+        <div class="form-group">
+          <label for="cliente-nome">Seu Nome:</label>
+          <input type="text" id="cliente-nome" placeholder="Digite seu nome completo" required>
+        </div>
+
+        <div class="form-group">
+          <label for="cliente-estado">Estado (UF) do Pedido:</label>
+          <select id="cliente-estado" required>
+            <option value="">Selecione o Estado...</option>
+            <option value="AC">Acre</option>
+            <option value="AL">Alagoas</option>
+            <option value="AP">Amapá</option>
+            <option value="AM">Amazonas</option>
+            <option value="BA">Bahia</option>
+            <option value="CE">Ceará</option>
+            <option value="DF">Distrito Federal</option>
+            <option value="ES">Espírito Santo</option>
+            <option value="GO">Goiás</option>
+            <option value="MA">Maranhão</option>
+            <option value="MT">Mato Grosso</option>
+            <option value="MS">Mato Grosso do Sul</option>
+            <option value="MG">Minas Gerais</option>
+            <option value="PA">Pará</option>
+            <option value="PB">Paraíba</option>
+            <option value="PR">Paraná</option>
+            <option value="PE">Pernambuco</option>
+            <option value="PI">Piauí</option>
+            <option value="RJ">Rio de Janeiro</option>
+            <option value="RN">Rio Grande do Norte</option>
+            <option value="RS">Rio Grande do Sul</option>
+            <option value="RO">Rondônia</option>
+            <option value="RR">Roraima</option>
+            <option value="SC">Santa Catarina</option>
+            <option value="SP">São Paulo</option>
+            <option value="SE">Sergipe</option>
+            <option value="TO">Tocantins</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="tipo-movel">Selecione o Móvel:</label>
+          <select id="tipo-movel" onchange="verificarOpcaoOutro()" required>
+            <option value="">Selecione o móvel...</option>
+            <option value="Guarda-Roupa de Casal / Closet">Guarda-Roupa de Casal / Closet</option>
+            <option value="Guarda-Roupa de Solteiro">Guarda-Roupa de Solteiro</option>
+            <option value="Armário de Cozinha">Armário de Cozinha</option>
+            <option value="Rack / Painel de TV">Rack / Painel de TV</option>
+            <option value="Estante / Multiuso">Estante / Multiuso</option>
+            <option value="Cadeira / Banqueta">Cadeira / Banqueta</option>
+            <option value="Mesa de Jantar / Escritório">Mesa de Jantar / Escritório</option>
+            <option value="Berço / Cama Infanto-Juvenil">Berço / Cama Infanto-Juvenil</option>
+            <option value="outro">Outro (digite abaixo)</option>
+          </select>
+        </div>
+
+        <div class="form-group" id="group-outro-movel" style="display: none;">
+          <label for="outro-movel-descricao">Descreva o Móvel:</label>
+          <input type="text" id="outro-movel-descricao" placeholder="Ex: Beliche de madeira com escrivaninha">
+        </div>
+
+        <div class="form-group">
+          <label for="endereco">Endereço Completo de Montagem:</label>
+          <input type="text" id="endereco" placeholder="Rua, número, bairro e complemento" required>
+        </div>
+
+        <button type="submit" id="btn-solicitar" class="btn-submit">Solicitar Montador</button>
+      </form>
+
+      <!-- Status: Aguardando Montador -->
+      <div id="waiting-container" class="status-card waiting-box">
+        <h3>⏳ Solicitação Enviada!</h3>
+        <p style="margin-top: 8px;">Procurando montadores disponíveis na sua região...</p>
+        <p style="font-size: 0.9rem; color: var(--gray); margin-top: 10px;">Aguardando um profissional enviar o valor do serviço.</p>
+        <button class="btn-cancel-request" onclick="cancelarSolicitacaoCliente()">✖ Cancelar Solicitação</button>
+      </div>
+
+      <!-- Status: Proposta Recebida -->
+      <div id="proposal-container" class="status-card proposal-box">
+        <div class="timer-badge">⏱️ <span id="timer-count-cliente">01:00</span></div>
+        <h3 style="color: var(--primary); text-align: left;">📋 Proposta de Montagem Recebida!</h3>
+        
+        <div style="margin: 1.5rem 0; display: flex; align-items: center; justify-content: center; gap: 1rem; background: white; padding: 1rem; border-radius: 8px;">
+          <img id="prop-montador-foto" src="https://via.placeholder.com/60" alt="Foto do Montador" class="profile-img">
+          <div style="text-align: left;">
+            <strong id="prop-montador-nome" style="font-size: 1.1rem;">Nome do Montador</strong>
+            <p id="prop-montador-avaliacao" class="rating-badge">★ Novo Montador</p>
+          </div>
+        </div>
+
+        <div style="background: white; padding: 1rem; border-radius: 8px; border: 1px solid #cbd5e1; margin-bottom: 1rem;">
+          <p>Valor orçado para a montagem:</p>
+          <p style="font-size: 1.8rem; font-weight: bold; color: var(--success);" id="prop-valor">R$ 0,00</p>
+        </div>
+
+        <div class="order-actions">
+          <button class="btn-accept" onclick="aceitarPropostaCliente()">Aceitar Valor</button>
+          <button class="btn-reject" onclick="recusarPropostaCliente()">Recusar</button>
+        </div>
+        <button class="btn-cancel-request" onclick="cancelarSolicitacaoCliente()">✖ Cancelar Solicitação</button>
+      </div>
+
+      <!-- Status: Aceito e a Caminho -->
+      <div id="accepted-container" class="status-card accepted-box">
+        <h3 style="color: var(--success);">🚗 Montador a Caminho!</h3>
+        <div style="margin: 1rem 0; display: flex; align-items: center; justify-content: center; gap: 1rem;">
+          <img id="cliente-montador-foto" src="https://via.placeholder.com/60" alt="Foto Montador" class="profile-img">
+          <div style="text-align: left;">
+            <strong id="cliente-montador-nome" style="font-size: 1.1rem;">Nome do Montador</strong>
+            <p id="cliente-montador-avaliacao" class="rating-badge">★ Novo Montador</p>
+            <p style="color: var(--gray); font-size: 0.9rem;">Serviço por <span id="cliente-valor-confirmado" style="font-weight: bold; color: var(--success);">R$ 0,00</span></p>
+          </div>
+        </div>
+
+        <div class="chat-container">
+          <div class="chat-header">
+            <span>💬 Chat com o Montador</span>
+            <small style="font-weight: normal; opacity: 0.8;">Em tempo real</small>
+          </div>
+          <div class="chat-messages" id="chat-messages-cliente"></div>
+          <div class="chat-input-area">
+            <input type="text" id="chat-input-cliente" placeholder="Mensagem para o montador..." onkeypress="handleChatEnter(event, 'cliente')">
+            <button onclick="enviarMensagemChat('cliente')">Enviar</button>
+          </div>
+        </div>
+        <button class="btn-cancel-request" onclick="cancelarSolicitacaoCliente()">✖ Cancelar Pedido</button>
+      </div>
+
+      <!-- Status: Tela de Avaliação do Cliente -->
+      <div id="rating-container" class="status-card rating-box">
+        <h3 style="color: var(--warning);">⭐ Avalie o Serviço do Montador</h3>
+        <p style="margin-top: 0.5rem;">O montador informou que concluiu o serviço. Como você avalia o trabalho oferecido?</p>
+        
+        <div class="star-rating">
+          <input type="radio" id="star5" name="rating" value="5" /><label for="star5" title="5 estrelas">★</label>
+          <input type="radio" id="star4" name="rating" value="4" /><label for="star4" title="4 estrelas">★</label>
+          <input type="radio" id="star3" name="rating" value="3" /><label for="star3" title="3 estrelas">★</label>
+          <input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="2 estrelas">★</label>
+          <input type="radio" id="star1" name="rating" value="1" /><label for="star1" title="1 estrela">★</label>
+        </div>
+
+        <button class="btn-submit" style="background-color: var(--warning);" onclick="enviarAvaliacaoCliente()">Confirmar Avaliação e Finalizar</button>
+      </div>
+
+      <!-- Status: Concluído -->
+      <div id="finished-container" class="status-card finished-box">
+        <h3 style="color: var(--success);">✅ Montagem Concluída!</h3>
+        <p style="margin-top: 0.5rem;">Seu móvel foi montado com sucesso. Obrigado por utilizar o Montador Expresso!</p>
+        <button class="btn-submit" style="margin-top: 1rem;" onclick="resetarCliente()">Solicitar Nova Montagem</button>
+      </div>
+    </section>
+
+    <!-- Área do Montador -->
+    <section id="view-montador" class="view-section">
+      <!-- Formulario de Login -->
+      <div id="montador-login">
+        <h2>Login do Montador</h2>
+        <form onsubmit="fazerLoginMontador(event)">
+          <div class="form-group">
+            <label for="login-tel">Telefone:</label>
+            <input type="tel" id="login-tel" placeholder="(00) 00000-0000" required>
+          </div>
+          <div class="form-group">
+            <label for="login-senha">Senha:</label>
+            <input type="password" id="login-senha" placeholder="Digite sua senha" required>
+          </div>
+          <button type="submit" class="btn-submit">Entrar no Painel</button>
+        </form>
+
+        <div class="toggle-auth-link">
+          <a onclick="mostrarFormularioAuth('esqueci')">Esqueceu a senha?</a>
+          <br><br>
+          Não possui uma conta? <a onclick="mostrarFormularioAuth('cadastro')">Criar login / Cadastrar-se</a>
+        </div>
+      </div>
+
+      <!-- Recuperação de Senha Segura -->
+      <div id="montador-esqueci" style="display: none;">
+        <h2>Recuperar Senha</h2>
+        <p style="font-size: 0.9rem; color: var(--gray); margin-bottom: 1.2rem;">
+          Informe o seu e-mail ou telefone cadastrado. As instruções de recuperação serão enviadas diretamente para você.
+        </p>
+        <form onsubmit="recuperarSenhaMontador(event)">
+          <div class="form-group">
+            <label for="recup-canal">Receber senha por:</label>
+            <select id="recup-canal" required>
+              <option value="email">E-mail Cadastrado</option>
+              <option value="sms">SMS no Telefone Cadastrado</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="recup-dado">Seu E-mail ou Telefone:</label>
+            <input type="text" id="recup-dado" placeholder="Digite seu e-mail ou telefone..." required>
+          </div>
+          <button type="submit" class="btn-submit">Enviar Instruções de Senha</button>
+        </form>
+
+        <div class="toggle-auth-link">
+          Lembrou da senha? <a onclick="mostrarFormularioAuth('login')">Voltar para o Login</a>
+        </div>
+      </div>
+
+      <!-- Formulario de Cadastro -->
+      <div id="montador-cadastro" style="display: none;">
+        <h2>Cadastro do Montador</h2>
+        <form id="form-cadastro-montador" onsubmit="cadastrarMontador(event)">
+          <div class="form-group">
+            <label for="m-foto">Foto de Perfil / Documento:</label>
+            <input type="file" id="m-foto" accept="image/*">
+          </div>
+          <div class="form-group">
+            <label for="m-nome">Nome Completo:</label>
+            <input type="text" id="m-nome" required>
+          </div>
+          <div class="form-group">
+            <label for="m-doc">CPF ou CNPJ:</label>
+            <input type="text" id="m-doc" required>
+          </div>
+          <div class="form-group">
+            <label for="m-tel">Telefone (Será seu Login):</label>
+            <input type="tel" id="m-tel" placeholder="(00) 00000-0000" required>
+          </div>
+          <div class="form-group">
+            <label for="m-senha">Criar Senha:</label>
+            <input type="password" id="m-senha" required>
+          </div>
+          <div class="form-group">
+            <label for="m-email">E-mail:</label>
+            <input type="email" id="m-email" required>
+          </div>
+
+          <h3 style="margin-top:1rem; margin-bottom:0.5rem; font-size:1.05rem;">Endereço de Atuação:</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="m-estado">Estado (UF):</label>
+              <select id="m-estado" required>
+                <option value="">UF</option>
+                <option value="AC">AC</option><option value="AL">AL</option><option value="AP">AP</option>
+                <option value="AM">AM</option><option value="BA">BA</option><option value="CE">CE</option>
+                <option value="DF">DF</option><option value="ES">ES</option><option value="GO">GO</option>
+                <option value="MA">MA</option><option value="MT">MT</option><option value="MS">MS</option>
+                <option value="MG">MG</option><option value="PA">PA</option><option value="PB">PB</option>
+                <option value="PR">PR</option><option value="PE">PE</option><option value="PI">PI</option>
+                <option value="RJ">RJ</option><option value="RN">RN</option><option value="RS">RS</option>
+                <option value="RO">RO</option><option value="RR">RR</option><option value="SC">SC</option>
+                <option value="SP">SP</option><option value="SE">SE</option><option value="TO">TO</option>
+              </select>
+            </div>
+            <div class="form-group" style="flex:2;">
+              <label for="m-municipio">Município (Cidade):</label>
+              <input type="text" id="m-municipio" placeholder="Digite a cidade" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="m-bairro">Bairro:</label>
+            <input type="text" id="m-bairro" placeholder="Digite o bairro de atuação principal" required>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group" style="flex:2;">
+              <label for="m-rua">Rua / Avenida:</label>
+              <input type="text" id="m-rua" required>
+            </div>
+            <div class="form-group" style="flex:1;">
+              <label for="m-numero">Número:</label>
+              <input type="text" id="m-numero" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="m-complemento">Complemento:</label>
+              <input type="text" id="m-complemento" placeholder="Apt, bloco, etc.">
+            </div>
+            <div class="form-group">
+              <label for="m-cep">CEP:</label>
+              <input type="text" id="m-cep" placeholder="00000-000" required>
+            </div>
+          </div>
+
+          <div class="terms-group">
+            <input type="checkbox" id="m-termos" required>
+            <label for="m-termos" style="font-weight: normal; margin-bottom: 0;">
+              Estou de acordo com os termos. <a class="link-terms" onclick="abrirModalTermos()">Visualizar Termos</a>
+            </label>
+          </div>
+
+          <button type="submit" class="btn-submit">Finalizar Cadastro e Entrar</button>
+        </form>
+
+        <div class="toggle-auth-link">
+          Já tem uma conta? <a onclick="mostrarFormularioAuth('login')">Fazer Login</a>
+        </div>
+      </div>
+
+      <!-- Dashboard do Montador -->
+      <div id="montador-dashboard" style="display: none;">
+        <h2>Painel do Montador</h2>
+        
+        <div class="dashboard-header">
+          <div class="dashboard-top">
+            <div class="profile-info">
+              <img id="m-foto-preview" src="https://via.placeholder.com/60" alt="Foto Montador" class="profile-img">
+              <div class="profile-details">
+                <strong id="m-nome-display" style="font-size: 1.05rem;">Montador Profissional</strong>
+                <span id="m-rating-display" class="rating-badge">★ Novo Montador</span>
+                <span id="m-estado-display" style="font-size: 0.85rem; color: var(--gray);">Estado: --</span>
+                <span id="badge-status" class="status-badge status-offline">OFFLINE</span>
+              </div>
+            </div>
+
+            <div class="header-actions-group">
+              <button id="btn-status-toggle" class="btn-toggle-online is-off" onclick="toggleStatus()">
+                🟢 Ficar Online
+              </button>
+              <button class="btn-edit-profile" onclick="abrirModalEdicaoPerfil()">
+                ✏️ Atualizar Perfil
+              </button>
+              <button onclick="logoutMontador()" class="btn-logout" title="Sair da conta">
+                Sair ➔
+              </button>
+            </div>
+          </div>
+
+          <div class="annuity-card">
+            <div>
+              <strong style="color: var(--dark);">Mensalidade do App (R$ 50,00/mês):</strong>
+              <p id="status-anuidade" style="font-size: 0.9rem; color: var(--danger); font-weight: bold;">Pendente - Pague via PIX para liberar o sistema</p>
+            </div>
+            
+            <div id="pix-annuity-box">
+              <p style="font-size: 0.85rem; color: var(--gray);">Realize a transferência PIX para a chave abaixo:</p>
+              <div class="pix-code">00020101021126360014br.gov.bcb.pix011452506699000160520400005303986540550.005802BR592552.506.699 daniel carlos 6009SAO PAULO622905251M2PQ859H6H1X8QN6QKTY49VR63048A1D</div>
+              
+              <div id="pix-opcoes-pagamento" style="margin-top: 1rem; border-top: 1px dashed #cbd5e1; padding-top: 0.8rem;">
+                <div class="form-group">
+                  <label for="tipo-pagador-pix">Quem realizou o pagamento?</label>
+                  <select id="tipo-pagador-pix" onchange="verificarTipoPagadorPIX()">
+                    <option value="titular">Pagamento feito pelo titular da conta</option>
+                    <option value="terceiro">Pagamento realizado por terceiro</option>
+                  </select>
+                </div>
+
+                <div class="form-group" id="group-terceiro-nome" style="display: none;">
+                  <label for="nome-terceiro-pix">Nome do terceiro que fez o pagamento:</label>
+                  <input type="text" id="nome-terceiro-pix" placeholder="Digite o nome completo do pagador">
+                </div>
+
+                <button class="btn-submit" style="margin-top: 0.5rem; padding: 0.8rem; font-size: 0.95rem; background: var(--success);" onclick="submeterComprovantePIX()">Confirmar Pagamento</button>
+              </div>
+
+              <div id="pix-em-analise-box" style="display: none; background: #fffbeeb0; border: 1px solid var(--warning); padding: 1rem; border-radius: 6px; margin-top: 0.8rem;">
+                <p style="font-size: 0.95rem; color: var(--warning); font-weight: bold; margin: 0;">⏳ O pagamento está em análise pela administração...</p>
+                <p style="font-size: 0.8rem; color: var(--gray); margin-top: 4px;">Assim que for aprovado pelo painel administrativo, sua conta será liberada automaticamente.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="container-editar-perfil" style="display: none; background: #ffffff; padding: 1.2rem; border-radius: 8px; border: 1px solid #cbd5e1; margin-bottom: 1.5rem;">
+          <h3>Atualizar Meus Dados</h3>
+          <form onsubmit="salvarEdicaoPerfil(event)">
+            <div class="form-group">
+              <label for="edit-foto">Atualizar Foto de Perfil:</label>
+              <input type="file" id="edit-foto" accept="image/*">
+            </div>
+            <div class="form-group">
+              <label for="edit-nome">Nome Completo:</label>
+              <input type="text" id="edit-nome" required>
+            </div>
+            <div class="form-group">
+              <label for="edit-email">Novo E-mail:</label>
+              <input type="email" id="edit-email" required>
+            </div>
+            <div class="form-group">
+              <label for="edit-tel">Novo Telefone (Seu Login):</label>
+              <input type="tel" id="edit-tel" required>
+            </div>
+            <div class="form-group">
+              <label for="edit-senha">Nova Senha (Deixe em branco se não quiser alterar):</label>
+              <input type="password" id="edit-senha" placeholder="Nova senha...">
+            </div>
+
+            <h4 style="margin: 1rem 0 0.5rem 0;">Atualizar Endereço:</h4>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="edit-estado">Estado (UF):</label>
+                <select id="edit-estado" required>
+                  <option value="AC">AC</option><option value="AL">AL</option><option value="AP">AP</option>
+                  <option value="AM">AM</option><option value="BA">BA</option><option value="CE">CE</option>
+                  <option value="DF">DF</option><option value="ES">ES</option><option value="GO">GO</option>
+                  <option value="MA">MA</option><option value="MT">MT</option><option value="MS">MS</option>
+                  <option value="MG">MG</option><option value="PA">PA</option><option value="PB">PB</option>
+                  <option value="PR">PR</option><option value="PE">PE</option><option value="PI">PI</option>
+                  <option value="RJ">RJ</option><option value="RN">RN</option><option value="RS">RS</option>
+                  <option value="RO">RO</option><option value="RR">RR</option><option value="SC">SC</option>
+                  <option value="SP">SP</option><option value="SE">SE</option><option value="TO">TO</option>
+                </select>
+              </div>
+              <div class="form-group" style="flex:2;">
+                <label for="edit-municipio">Município:</label>
+                <input type="text" id="edit-municipio" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="edit-bairro">Bairro:</label>
+              <input type="text" id="edit-bairro" required>
+            </div>
+            <div class="form-row">
+              <div class="form-group" style="flex:2;">
+                <label for="edit-rua">Rua / Avenida:</label>
+                <input type="text" id="edit-rua" required>
+              </div>
+              <div class="form-group" style="flex:1;">
+                <label for="edit-numero">Número:</label>
+                <input type="text" id="edit-numero" required>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="edit-complemento">Complemento:</label>
+                <input type="text" id="edit-complemento">
+              </div>
+              <div class="form-group">
+                <label for="edit-cep">CEP:</label>
+                <input type="text" id="edit-cep" required>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 0.5rem; margin-top:1rem;">
+              <button type="submit" class="btn-submit" style="background: var(--success); margin-top: 0;">Salvar Alterações</button>
+              <button type="button" class="btn-submit" style="background: var(--gray); margin-top: 0;" onclick="fecharModalEdicaoPerfil()">Cancelar</button>
+            </div>
+          </form>
+        </div>
+
+        <h3>Chamados e Serviços</h3>
+        <div id="lista-chamados">
+          <p style="color: var(--gray); margin-top: 1rem;">Nenhum chamado no momento. Aguarde novas solicitações...</p>
+        </div>
+
+        <h3 id="titulo-historico">📜 Histórico do Mês</h3>
+        <div id="lista-historico">
+          <p style="color: var(--gray); font-size: 0.9rem;">Nenhum serviço finalizado neste mês.</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Área Administrativa -->
+    <section id="view-admin" class="view-section">
+      <h2>Painel de Administração</h2>
+      
+      <div class="admin-tabs">
+        <button id="btn-tab-pagamentos" class="admin-tab-btn active" onclick="alternarAbaAdmin('pagamentos')">Pagamentos PIX</button>
+        <button id="btn-tab-pesquisa" class="admin-tab-btn" onclick="alternarAbaAdmin('pesquisa')">Buscar / Gerenciar Entregadores</button>
+      </div>
+      
+      <!-- Aba 1: Pagamentos PIX -->
+      <div id="admin-aba-pagamentos">
+        <p style="color: var(--gray); font-size: 0.9rem; margin-bottom: 1.5rem;">Gerencie as solicitações de confirmação de pagamento de mensalidade dos montadores.</p>
+        <div id="lista-admin-pagamentos">
+          <p style="color: var(--gray);">Nenhum pagamento em análise no momento.</p>
+        </div>
+      </div>
+
+      <!-- Aba 2: Pesquisa e Gestão de Contas -->
+      <div id="admin-aba-pesquisa" style="display: none;">
+        <div class="form-group">
+          <label for="search-admin">Pesquisar por Nome, CPF ou Telefone:</label>
+          <input type="text" id="search-admin" placeholder="Digite aqui para buscar..." oninput="buscarMontadoresAdmin()">
+        </div>
+
+        <div id="lista-admin-busca">
+          <p style="color: var(--gray);">Digite algo acima para pesquisar cadastros...</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal de Edição pelo Administrador -->
+  <div id="modal-admin-editar" class="modal-terms" style="display: none;">
+    <div class="modal-terms-content" style="max-height: 90vh;">
+      <div class="modal-terms-header">
+        <span>✏️ Editar Montador (Admin)</span>
+        <button onclick="fecharModalAdminEditar()" style="background:none; border:none; color:white; font-size:1.2rem; cursor:pointer;">✖</button>
+      </div>
+      <div class="modal-terms-body">
+        <form onsubmit="salvarEdicaoAdmin(event)">
+          <input type="hidden" id="admin-edit-tel-antigo">
+          
+          <div class="form-group">
+            <label for="admin-edit-nome">Nome Completo:</label>
+            <input type="text" id="admin-edit-nome" required>
+          </div>
+          <div class="form-group">
+            <label for="admin-edit-doc">CPF/CNPJ:</label>
+            <input type="text" id="admin-edit-doc" required>
+          </div>
+          <div class="form-group">
+            <label for="admin-edit-tel">Telefone (Login):</label>
+            <input type="tel" id="admin-edit-tel" required>
+          </div>
+          <div class="form-group">
+            <label for="admin-edit-email">E-mail:</label>
+            <input type="email" id="admin-edit-email" required>
+          </div>
+          <div class="form-group">
+            <label for="admin-edit-senha">Senha:</label>
+            <input type="text" id="admin-edit-senha" required>
+          </div>
+          <div class="form-group">
+            <label for="admin-edit-estado">Estado (UF):</label>
+            <input type="text" id="admin-edit-estado" required>
+          </div>
+          <div class="form-group">
+            <label for="admin-edit-municipio">Município:</label>
+            <input type="text" id="admin-edit-municipio" required>
+          </div>
+
+          <button type="submit" class="btn-submit" style="background: var(--success);">Salvar Alterações</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal dos Termos de Uso -->
+  <div id="modal-termos-uso" class="modal-terms">
+    <div class="modal-terms-content">
+      <div class="modal-terms-header">
+        <span>📄 Termos e Condições de Uso</span>
+        <button onclick="fecharModalTermos()" style="background:none; border:none; color:white; font-size:1.2rem; cursor:pointer;">✖</button>
+      </div>
+      <div class="modal-terms-body">
+        <h4>1. Natureza da Plataforma</h4>
+        <p>O aplicativo <strong>Montador Expresso</strong> atua exclusivamente como uma ferramenta tecnológica de intermediação, aproximando clientes que necessitam de serviços de montagem e profissionais autônomos credenciados.</p>
+
+        <h4>2. Ausência de Vínculo Trabalhista e Comercial</h4>
+        <p>O montador cadastrado é um prestador de serviços autônomo e independente. Não existe qualquer relação de trabalho, subordinação, vínculo empregatício ou sociedade entre a plataforma <strong>Montador Expresso</strong>, o montador ou o cliente contratante.</p>
+
+        <h4>3. Isenção em Caso de Desistência ou Cancelamento</h4>
+        <p>Caso o cliente cancele ou desista da montagem durante o percurso do montador até o local indicado, a <strong>Montador Expresso</strong> não se responsabilizará por custos de deslocamento, perda de tempo ou eventuais prejuízos decorrentes do cancelamento.</p>
+
+        <h4>4. Negociação e Execução do Serviço</h4>
+        <p>Os valores cobrados, prazos e detalhes da execução da montagem são alinhados diretamente entre montador e cliente. A plataforma não interfere na definição dos preços e não garante a qualidade técnica direta dos serviços prestados por terceiros.</p>
+
+        <h4>5. Pagamento de Mensalidade do Profissional</h4>
+        <p>Para ter acesso ao recebimento de chamados na plataforma, o montador concorda em efetuar o pagamento da taxa mensal de assinatura do aplicativo via PIX no valor estipulado, sob pena de suspensão de acesso aos serviços.</p>
+      </div>
+      <div class="modal-terms-footer">
+        <button class="btn-submit" style="margin-top: 0; width: auto; padding: 0.6rem 1.2rem; font-size: 0.95rem;" onclick="aceitarEFecharTermos()">Li e Aceito os Termos</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <button class="btn-admin-footer" onclick="acessarAdminComSenha()">🔒 Acesso Restrito Admin</button>
+  </footer>
+
+  <script>
+    function obterMontadoresDoBanco() {
+      const dados = localStorage.getItem('banco_montadores');
+      return dados ? JSON.parse(dados) : [];
+    }
+
+    function salvarMontadorNoBanco(montador) {
+      const montadores = obterMontadoresDoBanco();
+      montadores.push(montador);
+      localStorage.setItem('banco_montadores', JSON.stringify(montadores));
+    }
+
+    function atualizarMontadorNoBanco(montadorAtualizado, telefoneAntigo) {
+      let montadores = obterMontadoresDoBanco();
+      const chaveBusca = telefoneAntigo || montadorAtualizado.telefone;
+      montadores = montadores.map(m => m.telefone === chaveBusca ? montadorAtualizado : m);
+      localStorage.setItem('banco_montadores', JSON.stringify(montadores));
+    }
+
+    function removerMontadorDoBanco(telefone) {
+      let montadores = obterMontadoresDoBanco();
+      montadores = montadores.filter(m => m.telefone !== telefone);
+      localStorage.setItem('banco_montadores', JSON.stringify(montadores));
+    }
+
+    function obterSessaoMontador() {
+      const sessao = localStorage.getItem('sessao_montador_ativa');
+      return sessao ? JSON.parse(sessao) : null;
+    }
+
+    function salvarSessaoMontador(montador) {
+      localStorage.setItem('sessao_montador_ativa', JSON.stringify(montador));
+    }
+
+    function encerrarSessaoMontador() {
+      localStorage.removeItem('sessao_montador_ativa');
+    }
+
+    function calcularMediaAvaliacao(montador) {
+      if (!montador.avaliacoes || montador.avaliacoes.length === 0) {
+        return "★ Novo Montador";
+      }
+      const soma = montador.avaliacoes.reduce((acc, curr) => acc + curr, 0);
+      const media = (soma / montador.avaliacoes.length).toFixed(1);
+      return `★ ${media} (${montador.avaliacoes.length})`;
+    }
+
+    let audioContext = null;
+    let alarmInterval = null;
+
+    function iniciarSomAlertaContinuo() {
+      pararSomAlerta(); 
+
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContext) return;
+        audioContext = new AudioContext();
+
+        const tocarBeep = () => {
+          if (!audioContext || audioContext.state === 'closed') return;
+          
+          const osc = audioContext.createOscillator();
+          const gain = audioContext.createGain();
+
+          osc.type = 'triangle'; 
+          osc.frequency.setValueAtTime(880, audioContext.currentTime); 
+
+          gain.gain.setValueAtTime(1.0, audioContext.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.3);
+
+          osc.connect(gain);
+          gain.connect(audioContext.destination);
+
+          osc.start(audioContext.currentTime);
+          osc.stop(audioContext.currentTime + 0.3);
+        };
+
+        tocarBeep();
+        alarmInterval = setInterval(tocarBeep, 600);
+      } catch (e) {
+        console.error("Erro ao iniciar áudio contínuo:", e);
+      }
+    }
+
+    function pararSomAlerta() {
+      if (alarmInterval) {
+        clearInterval(alarmInterval);
+        alarmInterval = null;
+      }
+      if (audioContext) {
+        try {
+          audioContext.close();
+        } catch (e) {}
+        audioContext = null;
+      }
+    }
+
+    let usuarioLogado = null;
+    let isOnline = false;
+    let chamadosFila = []; 
+    let chamadoAtual = null;
+    let chatHistorico = [];
+    let chamadoNotificadoId = null;
+    
+    let cronometroInterval = null;
+    let tempoRestante = 60;
+
+    let cronometroClienteInterval = null;
+    let tempoRestanteCliente = 60;
+
+    let timerInvisivelAvaliacao = null;
+
+    window.onload = function() {
+      const sessao = obterSessaoMontador();
+      if (sessao) {
+        usuarioLogado = sessao;
+        carregarDashboard();
+      }
+    };
+
+    function switchView(view) {
+      document.querySelectorAll('.btn-mode').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
+
+      if (view === 'cliente') {
+        document.querySelectorAll('.btn-mode')[0].classList.add('active');
+        document.getElementById('view-cliente').classList.add('active');
+      } else if (view === 'montador') {
+        document.querySelectorAll('.btn-mode')[1].classList.add('active');
+        document.getElementById('view-montador').classList.add('active');
+      } else if (view === 'admin') {
+        document.getElementById('view-admin').classList.add('active');
+        renderizarPainelAdmin();
+      }
+    }
+
+    function acessarAdminComSenha() {
+      const senhaInformada = prompt('Digite a senha de administrador:');
+      
+      if (senhaInformada === 'sistema@123') {
+        switchView('admin');
+      } else if (senhaInformada !== null) {
+        alert('Senha incorreta! Acesso negado.');
+      }
+    }
+
+    function mostrarFormularioAuth(tipo) {
+      document.getElementById('montador-login').style.display = 'none';
+      document.getElementById('montador-cadastro').style.display = 'none';
+      document.getElementById('montador-esqueci').style.display = 'none';
+
+      if (tipo === 'cadastro') {
+        document.getElementById('montador-cadastro').style.display = 'block';
+      } else if (tipo === 'esqueci') {
+        document.getElementById('montador-esqueci').style.display = 'block';
+      } else {
+        document.getElementById('montador-login').style.display = 'block';
+      }
+    }
+
+    function abrirModalTermos() {
+      document.getElementById('modal-termos-uso').style.display = 'flex';
+    }
+
+    function fecharModalTermos() {
+      document.getElementById('modal-termos-uso').style.display = 'none';
+    }
+
+    function aceitarEFecharTermos() {
+      document.getElementById('m-termos').checked = true;
+      fecharModalTermos();
+    }
+
+    function recuperarSenhaMontador(e) {
+      e.preventDefault();
+      const canal = document.getElementById('recup-canal').value;
+      const dado = document.getElementById('recup-dado').value.trim();
+
+      const montadores = obterMontadoresDoBanco();
+      const usuarioEncontrado = montadores.find(m => m.email === dado || m.telefone === dado);
+
+      if (!usuarioEncontrado) {
+        alert('Nenhuma conta encontrada com o e-mail ou telefone informado!');
+        return;
+      }
+
+      if (canal === 'email') {
+        alert(`✅ Instruções para redefinição de senha foram enviadas para o e-mail: ${usuarioEncontrado.email}`);
+      } else {
+        alert(`✅ Código SMS para redefinição de senha foi enviado para o telefone: ${usuarioEncontrado.telefone}`);
+      }
+
+      document.getElementById('recup-dado').value = '';
+      mostrarFormularioAuth('login');
+    }
+
+    function cadastrarMontador(e) {
+      e.preventDefault();
+      
+      const termosAceitos = document.getElementById('m-termos').checked;
+      if (!termosAceitos) {
+        alert('Você precisa aceitar os termos de uso para concluir seu cadastro!');
+        return;
+      }
+
+      const telefone = document.getElementById('m-tel').value.trim();
+      const senha = document.getElementById('m-senha').value.trim();
+      const nome = document.getElementById('m-nome').value.trim();
+      const doc = document.getElementById('m-doc').value.trim();
+      const email = document.getElementById('m-email').value.trim();
+      
+      const estado = document.getElementById('m-estado').value;
+      const municipio = document.getElementById('m-municipio').value.trim();
+      const bairro = document.getElementById('m-bairro').value.trim();
+      const rua = document.getElementById('m-rua').value.trim();
+      const numero = document.getElementById('m-numero').value.trim();
+      const complemento = document.getElementById('m-complemento').value.trim();
+      const cep = document.getElementById('m-cep').value.trim();
+
+      const fotoInput = document.getElementById('m-foto');
+
+      const montadores = obterMontadoresDoBanco();
+      const jaExiste = montadores.find(m => m.telefone === telefone);
+
+      if (jaExiste) {
+        alert('Este número de telefone já está cadastrado. Faça login!');
+        mostrarFormularioAuth('login');
+        return;
+      }
+
+      const novoMontador = {
+        nome,
+        doc,
+        telefone,
+        senha,
+        email,
+        estado,
+        municipio,
+        bairro,
+        rua,
+        numero,
+        complemento,
+        cep,
+        fotoUrl: 'https://via.placeholder.com/60',
+        mesPagoAno: null,
+        statusPagamento: 'pendente',
+        dadosPagamentoPix: null,
+        historicoServicos: [],
+        avaliacoes: [],
+        mesHistoricoAtual: obterMesAnoAtual()
+      };
+
+      const finalizarCadastro = () => {
+        salvarMontadorNoBanco(novoMontador);
+        salvarSessaoMontador(novoMontador);
+        usuarioLogado = novoMontador;
+        document.getElementById('form-cadastro-montador').reset();
+        alert('Cadastro realizado com sucesso!');
+        carregarDashboard();
+      };
+
+      if (fotoInput.files && fotoInput.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          novoMontador.fotoUrl = evt.target.result;
+          finalizarCadastro();
+        };
+        reader.onerror = function() {
+          finalizarCadastro();
+        };
+        reader.readAsDataURL(fotoInput.files[0]);
+      } else {
+        finalizarCadastro();
+      }
+    }
+
+    function fazerLoginMontador(e) {
+      e.preventDefault();
+      const tel = document.getElementById('login-tel').value.trim();
+      const senha = document.getElementById('login-senha').value.trim();
+
+      const montadores = obterMontadoresDoBanco();
+      const usuarioEncontrado = montadores.find(m => m.telefone === tel && m.senha === senha);
+
+      if (!usuarioEncontrado) {
+        alert('Telefone ou senha incorretos!');
+        return;
+      }
+
+      usuarioLogado = usuarioEncontrado;
+      if (!usuarioLogado.historicoServicos) {
+        usuarioLogado.historicoServicos = [];
+      }
+      if (!usuarioLogado.avaliacoes) {
+        usuarioLogado.avaliacoes = [];
+      }
+      salvarSessaoMontador(usuarioLogado);
+      carregarDashboard();
+    }
+
+    function logoutMontador() {
+      pararCronometro();
+      pararCronometroCliente();
+      pararSomAlerta();
+      if (timerInvisivelAvaliacao) clearTimeout(timerInvisivelAvaliacao);
+      encerrarSessaoMontador();
+      usuarioLogado = null;
+      isOnline = false;
+      chamadoNotificadoId = null;
+      document.getElementById('montador-dashboard').style.display = 'none';
+      document.getElementById('montador-login').style.display = 'block';
+    }
+
+    function carregarDashboard() {
+      document.getElementById('montador-login').style.display = 'none';
+      document.getElementById('montador-cadastro').style.display = 'none';
+      document.getElementById('montador-esqueci').style.display = 'none';
+      document.getElementById('montador-dashboard').style.display = 'block';
+
+      document.getElementById('m-nome-display').innerText = usuarioLogado.nome;
+      document.getElementById('m-rating-display').innerText = calcularMediaAvaliacao(usuarioLogado);
+      document.getElementById('m-estado-display').innerText = `Estado: ${usuarioLogado.estado || 'Não informado'}`;
+      document.getElementById('m-foto-preview').src = usuarioLogado.fotoUrl || 'https://via.placeholder.com/60';
+
+      verificarStatusPix();
+      verificarViradaDeMesHistorico();
+      renderizarHistoricoMontador();
+      renderizarChamadoMontador();
+    }
+
+    function abrirModalEdicaoPerfil() {
+      document.getElementById('container-editar-perfil').style.display = 'block';
+      document.getElementById('edit-nome').value = usuarioLogado.nome;
+      document.getElementById('edit-email').value = usuarioLogado.email;
+      document.getElementById('edit-tel').value = usuarioLogado.telefone;
+      document.getElementById('edit-senha').value = '';
+      
+      document.getElementById('edit-estado').value = usuarioLogado.estado || '';
+      document.getElementById('edit-municipio').value = usuarioLogado.municipio || '';
+      document.getElementById('edit-bairro').value = usuarioLogado.bairro || '';
+      document.getElementById('edit-rua').value = usuarioLogado.rua || '';
+      document.getElementById('edit-numero').value = usuarioLogado.numero || '';
+      document.getElementById('edit-complemento').value = usuarioLogado.complemento || '';
+      document.getElementById('edit-cep').value = usuarioLogado.cep || '';
+    }
+
+    function fecharModalEdicaoPerfil() {
+      document.getElementById('container-editar-perfil').style.display = 'none';
+    }
+
+    function salvarEdicaoPerfil(e) {
+      e.preventDefault();
+      const telefoneAntigo = usuarioLogado.telefone;
+
+      usuarioLogado.nome = document.getElementById('edit-nome').value.trim();
+      usuarioLogado.email = document.getElementById('edit-email').value.trim();
+      usuarioLogado.telefone = document.getElementById('edit-tel').value.trim();
+      
+      const novaSenha = document.getElementById('edit-senha').value.trim();
+      if (novaSenha !== '') {
+        usuarioLogado.senha = novaSenha;
+      }
+
+      usuarioLogado.estado = document.getElementById('edit-estado').value;
+      usuarioLogado.municipio = document.getElementById('edit-municipio').value.trim();
+      usuarioLogado.bairro = document.getElementById('edit-bairro').value.trim();
+      usuarioLogado.rua = document.getElementById('edit-rua').value.trim();
+      usuarioLogado.numero = document.getElementById('edit-numero').value.trim();
+      usuarioLogado.complemento = document.getElementById('edit-complemento').value.trim();
+      usuarioLogado.cep = document.getElementById('edit-cep').value.trim();
+
+      const fotoInput = document.getElementById('edit-foto');
+      
+      const finalizarSalvamento = () => {
+        atualizarMontadorNoBanco(usuarioLogado, telefoneAntigo);
+        salvarSessaoMontador(usuarioLogado);
+
+        document.getElementById('m-nome-display').innerText = usuarioLogado.nome;
+        document.getElementById('m-rating-display').innerText = calcularMediaAvaliacao(usuarioLogado);
+        document.getElementById('m-estado-display').innerText = `Estado: ${usuarioLogado.estado}`;
+        document.getElementById('m-foto-preview').src = usuarioLogado.fotoUrl || 'https://via.placeholder.com/60';
+        fecharModalEdicaoPerfil();
+
+        alert('Seus dados foram atualizados com sucesso!');
+        renderizarChamadoMontador();
+      };
+
+      if (fotoInput.files && fotoInput.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          usuarioLogado.fotoUrl = evt.target.result;
+          finalizarSalvamento();
+        };
+        reader.readAsDataURL(fotoInput.files[0]);
+      } else {
+        finalizarSalvamento();
+      }
+    }
+
+    function obterMesAnoAtual() {
+      const hoje = new Date();
+      const mes = String(hoje.getMonth() + 1).padStart(2, '0');
+      const ano = hoje.getFullYear();
+      return `${mes}/${ano}`;
+    }
+
+    function verificarStatusPix() {
+      const statusAnuidade = document.getElementById('status-anuidade');
+      const boxPix = document.getElementById('pix-annuity-box');
+      const opcoesPagamento = document.getElementById('pix-opcoes-pagamento');
+      const boxEmAnalise = document.getElementById('pix-em-analise-box');
+      const mesAtual = obterMesAnoAtual();
+
+      if (usuarioLogado.mesPagoAno === mesAtual && usuarioLogado.statusPagamento === 'aprovado') {
+        statusAnuidade.innerText = `Mensalidade Ativa (${mesAtual})`;
+        statusAnuidade.style.color = 'var(--success)';
+        boxPix.style.display = 'none';
+      } else if (usuarioLogado.statusPagamento === 'em_analise') {
+        isOnline = false;
+        atualizarBadgeStatus();
+        statusAnuidade.innerText = `Em Análise (${mesAtual})`;
+        statusAnuidade.style.color = 'var(--warning)';
+        boxPix.style.display = 'block';
+        opcoesPagamento.style.display = 'none';
+        boxEmAnalise.style.display = 'block';
+      } else {
+        isOnline = false;
+        atualizarBadgeStatus();
+        statusAnuidade.innerText = `Pendente (${mesAtual}) - Efetue o PIX para ficar ONLINE`;
+        statusAnuidade.style.color = 'var(--danger)';
+        boxPix.style.display = 'block';
+        opcoesPagamento.style.display = 'block';
+        boxEmAnalise.style.display = 'none';
+      }
+    }
+
+    function verificarTipoPagadorPIX() {
+      const select = document.getElementById('tipo-pagador-pix');
+      const groupTerceiro = document.getElementById('group-terceiro-nome');
+      
+      if (select.value === 'terceiro') {
+        groupTerceiro.style.display = 'block';
+      } else {
+        groupTerceiro.style.display = 'none';
+      }
+    }
+
+    function submeterComprovantePIX() {
+      const tipoPagador = document.getElementById('tipo-pagador-pix').value;
+      let nomePagador = usuarioLogado.nome;
+
+      if (tipoPagador === 'terceiro') {
+        const nomeTerceiro = document.getElementById('nome-terceiro-pix').value.trim();
+        if (!nomeTerceiro) {
+          alert('Por favor, informe o nome do terceiro que efetuou o pagamento!');
+          return;
+        }
+        nomePagador = nomeTerceiro;
+      }
+
+      usuarioLogado.statusPagamento = 'em_analise';
+      usuarioLogado.dadosPagamentoPix = {
+        tipoPagador: tipoPagador,
+        nomePagador: nomePagador,
+        dataSolicitacao: new Date().toLocaleString('pt-BR')
+      };
+
+      atualizarMontadorNoBanco(usuarioLogado);
+      salvarSessaoMontador(usuarioLogado);
+
+      verificarStatusPix();
+      alert('O pagamento está em análise. Por favor, aguarde a liberação do administrador.');
+    }
+
+    function toggleStatus() {
+      const mesAtual = obterMesAnoAtual();
+
+      if (usuarioLogado.mesPagoAno !== mesAtual || usuarioLogado.statusPagamento !== 'aprovado') {
+        alert(`Atenção: A mensalidade do mês (${mesAtual}) está pendente ou aguardando aprovação.`);
+        return;
+      }
+
+      isOnline = !isOnline;
+      atualizarBadgeStatus();
+      renderizarChamadoMontador();
+    }
+
+    function atualizarBadgeStatus() {
+      const badge = document.getElementById('badge-status');
+      const btnToggle = document.getElementById('btn-status-toggle');
+
+      if (isOnline) {
+        badge.innerText = 'ONLINE';
+        badge.className = 'status-badge status-online';
+        btnToggle.innerText = '🔴 Ficar Offline';
+        btnToggle.className = 'btn-toggle-online is-on';
+      } else {
+        badge.innerText = 'OFFLINE';
+        badge.className = 'status-badge status-offline';
+        btnToggle.innerText = '🟢 Ficar Online';
+        btnToggle.className = 'btn-toggle-online is-off';
+      }
+    }
+
+    function iniciarCronometro() {
+      pararCronometro();
+      tempoRestante = 60;
+      atualizarTextoCronometro();
+
+      cronometroInterval = setInterval(() => {
+        tempoRestante--;
+        atualizarTextoCronometro();
+
+        if (tempoRestante <= 0) {
+          pararCronometro();
+          pararSomAlerta();
+          alert('⏱️ O tempo de 1 minuto para responder expirou! O chamado foi removido.');
+          recusarServicoMontador(true);
+        }
+      }, 1000);
+    }
+
+    function pararCronometro() {
+      if (cronometroInterval) {
+        clearInterval(cronometroInterval);
+        cronometroInterval = null;
+      }
+    }
+
+    function atualizarTextoCronometro() {
+      const timerElement = document.getElementById('timer-count');
+      if (timerElement) {
+        const minutos = Math.floor(tempoRestante / 60);
+        const segundos = tempoRestante % 60;
+        timerElement.innerText = `${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`;
+      }
+    }
+
+    function iniciarCronometroCliente() {
+      pararCronometroCliente();
+      tempoRestanteCliente = 60;
+      atualizarTextoCronometroCliente();
+
+      cronometroClienteInterval = setInterval(() => {
+        tempoRestanteCliente--;
+        atualizarTextoCronometroCliente();
+
+        if (tempoRestanteCliente <= 0) {
+          pararCronometroCliente();
+          alert('⏱️ Seu tempo de 1 minuto para aceitar a proposta expirou!');
+          recusarPropostaCliente(true);
+        }
+      }, 1000);
+    }
+
+    function pararCronometroCliente() {
+      if (cronometroClienteInterval) {
+        clearInterval(cronometroClienteInterval);
+        cronometroClienteInterval = null;
+      }
+    }
+
+    function atualizarTextoCronometroCliente() {
+      const timerElement = document.getElementById('timer-count-cliente');
+      if (timerElement) {
+        const minutos = Math.floor(tempoRestanteCliente / 60);
+        const segundos = tempoRestanteCliente % 60;
+        timerElement.innerText = `${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`;
+      }
+    }
+
+    function verificarOpcaoOutro() {
+      const select = document.getElementById('tipo-movel');
+      const containerOutro = document.getElementById('group-outro-movel');
+      const inputOutro = document.getElementById('outro-movel-descricao');
+
+      if (select.value === 'outro') {
+        containerOutro.style.display = 'block';
+        inputOutro.required = true;
+      } else {
+        containerOutro.style.display = 'none';
+        inputOutro.required = false;
+      }
+    }
+
+    function solicitarMontagem(e) {
+      e.preventDefault();
+      const nomeCliente = document.getElementById('cliente-nome').value;
+      const estadoCliente = document.getElementById('cliente-estado').value;
+      const selectMovel = document.getElementById('tipo-movel');
+      let nomeMovel = selectMovel.value;
+
+      if (nomeMovel === 'outro') {
+        nomeMovel = document.getElementById('outro-movel-descricao').value;
+      }
+
+      const endereco = document.getElementById('endereco').value;
+
+      document.getElementById('form-cliente').style.display = 'none';
+      document.getElementById('waiting-container').style.display = 'block';
+      document.getElementById('proposal-container').style.display = 'none';
+      document.getElementById('accepted-container').style.display = 'none';
+      document.getElementById('rating-container').style.display = 'none';
+      document.getElementById('finished-container').style.display = 'none';
+
+      chatHistorico = [];
+
+      const novoChamado = {
+        id: Date.now(),
+        cliente: nomeCliente,
+        estado: estadoCliente,
+        movel: nomeMovel,
+        endereco: endereco,
+        valor: 0,
+        status: 'solicitado'
+      };
+
+      chamadosFila.push(novoChamado);
+
+      if (!chamadoAtual) {
+        chamadoAtual = chamadosFila[0];
+      }
+
+      renderizarChamadoMontador();
+    }
+
+    function cancelarSolicitacaoCliente() {
+      if (confirm('Tem certeza de que deseja cancelar esta solicitação?')) {
+        pararCronometro();
+        pararCronometroCliente();
+        pararSomAlerta();
+        if (timerInvisivelAvaliacao) clearTimeout(timerInvisivelAvaliacao);
+        if (chamadoAtual) {
+          chamadosFila = chamadosFila.filter(c => c.id !== chamadoAtual.id);
+          chamadoAtual = chamadosFila.length > 0 ? chamadosFila[0] : null;
+        }
+        resetarCliente();
+        renderizarChamadoMontador();
+        alert('Sua solicitação foi cancelada.');
+      }
+    }
+
+    function resetarCliente() {
+      pararCronometroCliente();
+      if (timerInvisivelAvaliacao) clearTimeout(timerInvisivelAvaliacao);
+      document.getElementById('form-cliente').reset();
+      document.getElementById('form-cliente').style.display = 'block';
+      verificarOpcaoOutro();
+      document.getElementById('waiting-container').style.display = 'none';
+      document.getElementById('proposal-container').style.display = 'none';
+      document.getElementById('accepted-container').style.display = 'none';
+      document.getElementById('rating-container').style.display = 'none';
+      document.getElementById('finished-container').style.display = 'none';
+    }
+
+    function renderizarChamadoMontador() {
+      const container = document.getElementById('lista-chamados');
+      const mesAtual = obterMesAnoAtual();
+
+      if (!usuarioLogado || usuarioLogado.mesPagoAno !== mesAtual || usuarioLogado.statusPagamento !== 'aprovado') {
+        pararCronometro();
+        pararSomAlerta();
+        container.innerHTML = `<p style="color: var(--danger); margin-top: 1rem;">Sua mensalidade referente a ${mesAtual} está pendente ou em análise. Efetue/Aguarde a liberação do PIX para usar o app.</p>`;
+        return;
+      }
+
+      if (!isOnline) {
+        pararCronometro();
+        pararSomAlerta();
+        container.innerHTML = `<p style="color: var(--gray); margin-top: 1rem;">Você está OFFLINE. Fique ONLINE para receber solicitações de montagem.</p>`;
+        return;
+      }
+
+      if (!chamadoAtual) {
+        pararCronometro();
+        pararSomAlerta();
+        chamadoNotificadoId = null;
+        container.innerHTML = `<p style="color: var(--gray); margin-top: 1rem;">Nenhum chamado pendente no momento...</p>`;
+        return;
+      }
+
+      if (chamadoAtual.estado !== usuarioLogado.estado) {
+        pararCronometro();
+        pararSomAlerta();
+        chamadoNotificadoId = null;
+        container.innerHTML = `<p style="color: var(--gray); margin-top: 1rem;">Nenhum chamado pendente para o estado do seu cadastro (${usuarioLogado.estado}) no momento...</p>`;
+        return;
+      }
+
+      if (chamadoAtual.status === 'solicitado') {
+        if (chamadoNotificadoId !== chamadoAtual.id) {
+          iniciarSomAlertaContinuo();
+          chamadoNotificadoId = chamadoAtual.id;
+        }
+
+        container.innerHTML = `
+          <div class="order-card">
+            <div class="timer-badge">⏱️ <span id="timer-count">01:00</span></div>
+            <h4>🔨 Novo Serviço Solicitado! (${chamadoAtual.estado})</h4>
+            <p style="margin-top:0.3rem;"><strong>Cliente:</strong> ${chamadoAtual.cliente}</p>
+            <p><strong>Estado:</strong> ${chamadoAtual.estado}</p>
+            <p><strong>Móvel:</strong> ${chamadoAtual.movel}</p>
+            <p><strong>Endereço:</strong> ${chamadoAtual.endereco}</p>
+            
+            <div class="form-group" style="margin-top: 1rem;">
+              <label for="valor-input-montador">Insira o valor cobrado para a montagem (R$):</label>
+              <input type="number" id="valor-input-montador" placeholder="Ex: 150.00" min="1" step="0.01">
+            </div>
+
+            <div class="order-actions">
+              <button class="btn-accept" onclick="enviarPropostaMontador()">Enviar Valor ao Cliente</button>
+              <button class="btn-reject" onclick="recusarServicoMontador()">Recusar</button>
+            </div>
+          </div>
+        `;
+        if (!cronometroInterval) {
+          iniciarCronometro();
+        }
+      } 
+      else if (chamadoAtual.status === 'proposta_enviada') {
+        pararCronometro();
+        pararSomAlerta();
+        container.innerHTML = `
+          <div class="order-card">
+            <h4>⌛ Proposta Enviada ao Cliente</h4>
+            <p><strong>Móvel:</strong> ${chamadoAtual.movel}</p>
+            <p><strong>Valor Proposto:</strong> R$ ${chamadoAtual.valor.toFixed(2).replace('.', ',')}</p>
+            <p style="color: var(--gray); font-size: 0.9rem; margin-top: 0.5rem;">Aguardando a aprovação do cliente...</p>
+          </div>
+        `;
+      }
+      else if (chamadoAtual.status === 'em_andamento') {
+        pararCronometro();
+        pararSomAlerta();
+        container.innerHTML = `
+          <div class="order-card in-progress">
+            <h4 style="color: #b45309;">🚗 Pedido em Andamento</h4>
+            <p style="margin-top:0.3rem;"><strong>Cliente:</strong> ${chamadoAtual.cliente}</p>
+            <p><strong>Móvel:</strong> ${chamadoAtual.movel}</p>
+            <p><strong>Endereço:</strong> ${chamadoAtual.endereco} (${chamadoAtual.estado})</p>
+            <p style="font-size: 1.1rem; margin-top: 0.5rem; color: var(--dark);">
+              <strong>Valor Acertado: R$ ${chamadoAtual.valor.toFixed(2).replace('.', ',')}</strong>
+            </p>
+
+            <div class="chat-container">
+              <div class="chat-header">
+                <span>💬 Chat com a Cliente (${chamadoAtual.cliente})</span>
+                <small style="font-weight: normal; opacity: 0.8;">Em tempo real</small>
+              </div>
+              <div class="chat-messages" id="chat-messages-montador"></div>
+              <div class="chat-input-area">
+                <input type="text" id="chat-input-montador" placeholder="Mensagem para o cliente..." onkeypress="handleChatEnter(event, 'montador')">
+                <button onclick="enviarMensagemChat('montador')">Enviar</button>
+              </div>
+            </div>
+
+            <button class="btn-finish" onclick="solicitarAvaliacaoMontador()">Concluir e Solicitar Avaliação</button>
+          </div>
+        `;
+        renderizarChat();
+      }
+      else if (chamadoAtual.status === 'aguardando_avaliacao') {
+        pararCronometro();
+        pararSomAlerta();
+        container.innerHTML = `
+          <div class="order-card">
+            <h4>⭐ Aguardando Avaliação do Cliente</h4>
+            <p><strong>Cliente:</strong> ${chamadoAtual.cliente}</p>
+            <p><strong>Móvel:</strong> ${chamadoAtual.movel}</p>
+            <p style="color: var(--warning); font-weight: bold; margin-top: 0.5rem;">Você informou que concluiu o serviço. Aguardando a avaliação do cliente...</p>
+          </div>
+        `;
+      }
+    }
+
+    function enviarPropostaMontador() {
+      const valorInput = document.getElementById('valor-input-montador').value;
+      if (!valorInput || parseFloat(valorInput) <= 0) {
+        alert('Por favor, informe um valor válido para a montagem!');
+        return;
+      }
+
+      pararCronometro();
+      pararSomAlerta();
+
+      chamadoAtual.valor = parseFloat(valorInput);
+      chamadoAtual.status = 'proposta_enviada';
+      renderizarChamadoMontador();
+
+      document.getElementById('waiting-container').style.display = 'none';
+      document.getElementById('prop-montador-nome').innerText = usuarioLogado.nome;
+      document.getElementById('prop-montador-foto').src = usuarioLogado.fotoUrl || 'https://via.placeholder.com/60';
+      document.getElementById('prop-montador-avaliacao').innerText = calcularMediaAvaliacao(usuarioLogado);
+      document.getElementById('prop-valor').innerText = `R$ ${chamadoAtual.valor.toFixed(2).replace('.', ',')}`;
+      document.getElementById('proposal-container').style.display = 'block';
+
+      iniciarCronometroCliente();
+
+      alert('Proposta enviada ao cliente!');
+    }
+
+    function recusarServicoMontador(porExpiracao = false) {
+      pararCronometro();
+      pararSomAlerta();
+
+      if (!porExpiracao) {
+        alert('Você recusou o chamado.');
+      }
+      
+      if (chamadoAtual) {
+        chamadosFila = chamadosFila.filter(c => c.id !== chamadoAtual.id);
+        chamadoAtual = chamadosFila.length > 0 ? chamadosFila[0] : null;
+      }
+
+      renderizarChamadoMontador();
+    }
+
+    function solicitarAvaliacaoMontador() {
+      if (chamadoAtual && chamadoAtual.status === 'em_andamento') {
+        chamadoAtual.status = 'aguardando_avaliacao';
+        
+        document.getElementById('accepted-container').style.display = 'none';
+        document.getElementById('rating-container').style.display = 'block';
+
+        renderizarChamadoMontador();
+        alert('Solicitação de conclusão e avaliação enviada ao cliente!');
+
+        // Timer invisível de 30 segundos para resposta do cliente
+        if (timerInvisivelAvaliacao) clearTimeout(timerInvisivelAvaliacao);
+        timerInvisivelAvaliacao = setTimeout(() => {
+          if (chamadoAtual && chamadoAtual.status === 'aguardando_avaliacao') {
+            finalizarServicoMontador(true); // finaliza sem nota
+          }
+        }, 30000);
+      }
+    }
+
+    function enviarAvaliacaoCliente() {
+      const radios = document.getElementsByName('rating');
+      let notaSelecionada = 0;
+
+      for (let radio of radios) {
+        if (radio.checked) {
+          notaSelecionada = parseInt(radio.value);
+          break;
+        }
+      }
+
+      if (notaSelecionada === 0) {
+        alert('Por favor, selecione quantas estrelas deseja dar para o serviço do montador!');
+        return;
+      }
+
+      if (usuarioLogado) {
+        if (!usuarioLogado.avaliacoes) {
+          usuarioLogado.avaliacoes = [];
+        }
+        usuarioLogado.avaliacoes.push(notaSelecionada);
+        atualizarMontadorNoBanco(usuarioLogado);
+        salvarSessaoMontador(usuarioLogado);
+      }
+
+      finalizarServicoMontador(false);
+    }
+
+    function finalizarServicoMontador(semAvaliacao = false) {
+      if (timerInvisivelAvaliacao) clearTimeout(timerInvisivelAvaliacao);
+
+      if (chamadoAtual) {
+        document.getElementById('rating-container').style.display = 'none';
+        document.getElementById('finished-container').style.display = 'block';
+
+        const agora = new Date();
+        const dataConclusao = agora.toLocaleDateString('pt-BR') + ' às ' + agora.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
+        
+        verificarViradaDeMesHistorico();
+
+        if (!usuarioLogado.historicoServicos) {
+          usuarioLogado.historicoServicos = [];
+        }
+
+        usuarioLogado.historicoServicos.unshift({
+          cliente: chamadoAtual.cliente,
+          movel: chamadoAtual.movel,
+          endereco: chamadoAtual.endereco,
+          valor: chamadoAtual.valor,
+          data: dataConclusao
+        });
+
+        atualizarMontadorNoBanco(usuarioLogado);
+        salvarSessaoMontador(usuarioLogado);
+
+        if (!semAvaliacao) {
+          alert('Avaliação enviada e serviço finalizado com sucesso!');
+        } else {
+          alert('Tempo de resposta da avaliação esgotado. O serviço foi finalizado automaticamente!');
+        }
+
+        chamadosFila = chamadosFila.filter(c => c.id !== chamadoAtual.id);
+        chamadoAtual = chamadosFila.length > 0 ? chamadosFila[0] : null;
+
+        document.getElementById('m-rating-display').innerText = calcularMediaAvaliacao(usuarioLogado);
+        renderizarChamadoMontador();
+        renderizarHistoricoMontador();
+      }
+    }
+
+    function verificarViradaDeMesHistorico() {
+      if (!usuarioLogado) return;
+      const mesAtual = obterMesAnoAtual();
+
+      if (usuarioLogado.mesHistoricoAtual !== mesAtual) {
+        usuarioLogado.historicoServicos = []; 
+        usuarioLogado.mesHistoricoAtual = mesAtual;
+        atualizarMontadorNoBanco(usuarioLogado);
+        salvarSessaoMontador(usuarioLogado);
+      }
+    }
+
+    function renderizarHistoricoMontador() {
+      const containerHist = document.getElementById('lista-historico');
+      const mesAtual = obterMesAnoAtual();
+      
+      document.getElementById('titulo-historico').innerText = `📜 Histórico de Serviços (${mesAtual})`;
+
+      if (!usuarioLogado || !usuarioLogado.historicoServicos || usuarioLogado.historicoServicos.length === 0) {
+        containerHist.innerHTML = `<p style="color: var(--gray); font-size: 0.9rem;">Nenhum serviço finalizado no mês atual (${mesAtual}).</p>`;
+        return;
+      }
+
+      let html = '';
+      usuarioLogado.historicoServicos.forEach(item => {
+        html += `
+          <div class="history-card">
+            <div class="history-info">
+              <strong>${item.movel}</strong>
+              <span>Cliente: ${item.cliente} • Data: ${item.data}</span>
+            </div>
+            <div class="history-price">
+              R$ ${item.valor.toFixed(2).replace('.', ',')}
+            </div>
+          </div>
+        `;
+      });
+
+      containerHist.innerHTML = html;
+    }
+
+    function aceitarPropostaCliente() {
+      pararCronometroCliente();
+      if (chamadoAtual) {
+        chamadoAtual.status = 'em_andamento';
+
+        document.getElementById('proposal-container').style.display = 'none';
+        document.getElementById('cliente-montador-nome').innerText = usuarioLogado.nome;
+        document.getElementById('cliente-montador-foto').src = usuarioLogado.fotoUrl || 'https://via.placeholder.com/60';
+        document.getElementById('cliente-montador-avaliacao').innerText = calcularMediaAvaliacao(usuarioLogado);
+        document.getElementById('cliente-valor-confirmado').innerText = `R$ ${chamadoAtual.valor.toFixed(2).replace('.', ',')}`;
+
+        document.getElementById('accepted-container').style.display = 'block';
+
+        chatHistorico.push({
+          sender: 'montador',
+          text: `Olá ${chamadoAtual.cliente}, aceitei o chamado! Já estou a caminho do seu endereço.`
+        });
+
+        renderizarChamadoMontador();
+        renderizarChat();
+
+        alert('Proposta aceita! O chat com o montador foi liberado.');
+      }
+    }
+
+    function recusarPropostaCliente(porExpiracao = false) {
+      pararCronometroCliente();
+
+      if (!porExpiracao) {
+        alert('Você recusou a proposta. Buscando outro montador...');
+      }
+
+      if (chamadoAtual) {
+        chamadoAtual.status = 'solicitado';
+        chamadoAtual.valor = 0;
+      }
+
+      document.getElementById('proposal-container').style.display = 'none';
+      document.getElementById('waiting-container').style.display = 'block';
+
+      renderizarChamadoMontador();
+    }
+
+    function handleChatEnter(e, remetente) {
+      if (e.key === 'Enter') {
+        enviarMensagemChat(remetente);
+      }
+    }
+
+    function enviarMensagemChat(remetente) {
+      const inputId = remetente === 'cliente' ? 'chat-input-cliente' : 'chat-input-montador';
+      const input = document.getElementById(inputId);
+      const texto = input.value.trim();
+
+      if (!texto) return;
+
+      chatHistorico.push({
+        sender: remetente,
+        text: texto
+      });
+
+      input.value = '';
+      renderizarChat();
+    }
+
+    function renderizarChat() {
+      const boxCliente = document.getElementById('chat-messages-cliente');
+      const boxMontador = document.getElementById('chat-messages-montador');
+
+      let htmlCliente = '';
+      let htmlMontador = '';
+
+      chatHistorico.forEach(msg => {
+        const isClienteSender = msg.sender === 'cliente';
+        
+        htmlCliente += `
+          <div class="chat-msg ${isClienteSender ? 'sent' : 'received'}">
+            <span class="sender-name">${isClienteSender ? 'Você' : usuarioLogado.nome}</span>
+            ${msg.text}
+          </div>
+        `;
+
+        htmlMontador += `
+          <div class="chat-msg ${isClienteSender ? 'received' : 'sent'}">
+            <span class="sender-name">${isClienteSender ? (chamadoAtual ? chamadoAtual.cliente : 'Cliente') : 'Você'}</span>
+            ${msg.text}
+          </div>
+        `;
+      });
+
+      if (boxCliente) {
+        boxCliente.innerHTML = htmlCliente;
+        boxCliente.scrollTop = boxCliente.scrollHeight;
+      }
+      if (boxMontador) {
+        boxMontador.innerHTML = htmlMontador;
+        boxMontador.scrollTop = boxMontador.scrollHeight;
+      }
+    }
+
+    /* --- ÁREA ADMINISTRATIVA EXPANDIDA --- */
+
+    function alternarAbaAdmin(aba) {
+      document.getElementById('admin-aba-pagamentos').style.display = 'none';
+      document.getElementById('admin-aba-pesquisa').style.display = 'none';
+      document.getElementById('btn-tab-pagamentos').classList.remove('active');
+      document.getElementById('btn-tab-pesquisa').classList.remove('active');
+
+      if (aba === 'pagamentos') {
+        document.getElementById('admin-aba-pagamentos').style.display = 'block';
+        document.getElementById('btn-tab-pagamentos').classList.add('active');
+        renderizarPainelAdmin();
+      } else {
+        document.getElementById('admin-aba-pesquisa').style.display = 'block';
+        document.getElementById('btn-tab-pesquisa').classList.add('active');
+        buscarMontadoresAdmin();
+      }
+    }
+
+    function renderizarPainelAdmin() {
+      const container = document.getElementById('lista-admin-pagamentos');
+      const montadores = obterMontadoresDoBanco();
+      const pendentes = montadores.filter(m => m.statusPagamento === 'em_analise');
+
+      if (pendentes.length === 0) {
+        container.innerHTML = `<p style="color: var(--gray);">Nenhum pagamento PIX em análise no momento.</p>`;
+        return;
+      }
+
+      let html = '';
+      pendentes.forEach(m => {
+        const pagador = m.dadosPagamentoPix ? m.dadosPagamentoPix.nomePagador : m.nome;
+        const tipo = m.dadosPagamentoPix && m.dadosPagamentoPix.tipoPagador === 'terceiro' ? 'Terceiro' : 'Titular da Conta';
+
+        html += `
+          <div class="admin-card">
+            <p><strong>Montador:</strong> ${m.nome}</p>
+            <p><strong>Telefone do Cadastro:</strong> ${m.telefone}</p>
+            <p><strong>Tipo de Pagador:</strong> ${tipo}</p>
+            <p><strong>Nome no Comprovante/Pagador:</strong> <span style="color: var(--primary); font-weight: bold;">${pagador}</span></p>
+            <p style="font-size: 0.85rem; color: var(--gray);">Solicitado em: ${m.dadosPagamentoPix ? m.dadosPagamentoPix.dataSolicitacao : '--'}</p>
+            
+            <div style="display: flex; gap: 0.8rem; margin-top: 1rem;">
+              <button class="btn-accept" onclick="aprovarPagamentoAdmin('${m.telefone}')">Aprovar Pagamento</button>
+              <button class="btn-reject" onclick="recusarPagamentoAdmin('${m.telefone}')">Recusar Pagamento</button>
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    function aprovarPagamentoAdmin(telefone) {
+      const montadores = obterMontadoresDoBanco();
+      const montador = montadores.find(m => m.telefone === telefone);
+
+      if (montador) {
+        const mesAtual = obterMesAnoAtual();
+        montador.mesPagoAno = mesAtual;
+        montador.statusPagamento = 'aprovado';
+
+        atualizarMontadorNoBanco(montador);
+
+        if (usuarioLogado && usuarioLogado.telefone === telefone) {
+          usuarioLogado = montador;
+          salvarSessaoMontador(usuarioLogado);
+        }
+
+        alert(`Pagamento do montador ${montador.nome} aprovado com sucesso!`);
+        renderizarPainelAdmin();
+      }
+    }
+
+    function recusarPagamentoAdmin(telefone) {
+      const montadores = obterMontadoresDoBanco();
+      const montador = montadores.find(m => m.telefone === telefone);
+
+      if (montador) {
+        montador.statusPagamento = 'pendente';
+        montador.dadosPagamentoPix = null;
+
+        atualizarMontadorNoBanco(montador);
+
+        if (usuarioLogado && usuarioLogado.telefone === telefone) {
+          usuarioLogado = montador;
+          salvarSessaoMontador(usuarioLogado);
+        }
+
+        alert(`Pagamento do montador ${montador.nome} recusado.`);
+        renderizarPainelAdmin();
+      }
+    }
+
+    function buscarMontadoresAdmin() {
+      const termo = document.getElementById('search-admin').value.trim().toLowerCase();
+      const container = document.getElementById('lista-admin-busca');
+      const montadores = obterMontadoresDoBanco();
+
+      if (!termo) {
+        container.innerHTML = `<p style="color: var(--gray);">Digite algo acima para pesquisar cadastros...</p>`;
+        return;
+      }
+
+      const resultados = montadores.filter(m => 
+        (m.nome && m.nome.toLowerCase().includes(termo)) ||
+        (m.doc && m.doc.toLowerCase().includes(termo)) ||
+        (m.telefone && m.telefone.toLowerCase().includes(termo))
+      );
+
+      if (resultados.length === 0) {
+        container.innerHTML = `<p style="color: var(--gray);">Nenhum profissional encontrado com os dados digitados.</p>`;
+        return;
+      }
+
+      let html = '';
+      resultados.forEach(m => {
+        html += `
+          <div class="admin-card">
+            <div style="display:flex; align-items:center; gap:1rem; margin-bottom:0.8rem;">
+              <img src="${m.fotoUrl || 'https://via.placeholder.com/60'}" class="profile-img" alt="Foto">
+              <div>
+                <strong style="font-size:1.1rem;">${m.nome}</strong>
+                <p style="font-size:0.85rem; color:var(--gray);">${calcularMediaAvaliacao(m)}</p>
+              </div>
+            </div>
+
+            <p><strong>CPF/CNPJ:</strong> ${m.doc || 'Não informado'}</p>
+            <p><strong>Telefone / Login:</strong> ${m.telefone}</p>
+            <p><strong>E-mail:</strong> ${m.email || 'Não informado'}</p>
+            <p><strong>Senha:</strong> ${m.senha}</p>
+            <p><strong>Localidade:</strong> ${m.municipio || '--'} / ${m.estado || '--'}</p>
+            <p><strong>Endereço:</strong> ${m.rua || ''}, ${m.numero || ''} - ${m.bairro || ''} (CEP: ${m.cep || ''})</p>
+            <p><strong>Status Mensalidade:</strong> ${m.statusPagamento === 'aprovado' ? '🟢 Aprovado' : '🔴 Pendente/Análise'}</p>
+
+            <div style="display:flex; gap:0.5rem; margin-top:1rem;">
+              <button class="btn-submit" style="background:var(--secondary); font-size:0.9rem; padding:0.6rem; margin-top:0;" onclick="abrirModalAdminEditar('${m.telefone}')">✏️ Editar Cadastro</button>
+              <button class="btn-submit" style="background:var(--danger); font-size:0.9rem; padding:0.6rem; margin-top:0;" onclick="excluirMontadorAdmin('${m.telefone}')">🗑️ Excluir Conta</button>
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    function abrirModalAdminEditar(telefone) {
+      const montadores = obterMontadoresDoBanco();
+      const m = montadores.find(item => item.telefone === telefone);
+
+      if (m) {
+        document.getElementById('admin-edit-tel-antigo').value = m.telefone;
+        document.getElementById('admin-edit-nome').value = m.nome || '';
+        document.getElementById('admin-edit-doc').value = m.doc || '';
+        document.getElementById('admin-edit-tel').value = m.telefone || '';
+        document.getElementById('admin-edit-email').value = m.email || '';
+        document.getElementById('admin-edit-senha').value = m.senha || '';
+        document.getElementById('admin-edit-estado').value = m.estado || '';
+        document.getElementById('admin-edit-municipio').value = m.municipio || '';
+
+        document.getElementById('modal-admin-editar').style.display = 'flex';
+      }
+    }
+
+    function fecharModalAdminEditar() {
+      document.getElementById('modal-admin-editar').style.display = 'none';
+    }
+
+    function salvarEdicaoAdmin(e) {
+      e.preventDefault();
+      const telAntigo = document.getElementById('admin-edit-tel-antigo').value;
+      const montadores = obterMontadoresDoBanco();
+      const m = montadores.find(item => item.telefone === telAntigo);
+
+      if (m) {
+        m.nome = document.getElementById('admin-edit-nome').value.trim();
+        m.doc = document.getElementById('admin-edit-doc').value.trim();
+        m.telefone = document.getElementById('admin-edit-tel').value.trim();
+        m.email = document.getElementById('admin-edit-email').value.trim();
+        m.senha = document.getElementById('admin-edit-senha').value.trim();
+        m.estado = document.getElementById('admin-edit-estado').value.trim();
+        m.municipio = document.getElementById('admin-edit-municipio').value.trim();
+
+        atualizarMontadorNoBanco(m, telAntigo);
+
+        if (usuarioLogado && usuarioLogado.telefone === telAntigo) {
+          usuarioLogado = m;
+          salvarSessaoMontador(usuarioLogado);
+        }
+
+        fecharModalAdminEditar();
+        alert('Cadastro do profissional atualizado com sucesso!');
+        buscarMontadoresAdmin();
+      }
+    }
+
+    function excluirMontadorAdmin(telefone) {
+      if (confirm('Tem certeza de que deseja EXCLUIR permanentemente este cadastro? Esta ação não pode ser desfeita.')) {
+        removerMontadorDoBanco(telefone);
+
+        if (usuarioLogado && usuarioLogado.telefone === telefone) {
+          logoutMontador();
+        }
+
+        alert('Conta excluída com sucesso!');
+        buscarMontadoresAdmin();
+      }
+    }
+  </script>
+</body>
+</html>
